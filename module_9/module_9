@@ -1,0 +1,89 @@
+import UIKit
+
+//режим управления
+var autoPilotModeOn: Bool = true
+
+// характеристики атомобиля
+let mass = 2108 // масса кг
+let length = 4976 // длина мм
+let width = 1963 // ширина мм
+let height = 1435 // высота мм
+let wheelBase = 2959 // колесная база мм
+let clearance = 154.9 // клиренс мм
+let cargoVolume = 900 // объем багажника
+
+// функционал машины
+var musicPlayerOn: Bool = true // функция управления музыкой
+var skylightOpeningPercentage = 0 // степень открытия люка в процентах от 0 до 100
+var fanSpeed = 0 // скорость вентилятора обдува от 0 жо 10
+var driverSeatTemperature = 18 // климатические настройки температуры для водительского в градусах цельсия
+var driverSeatFanDirection = 1 // климатические настройки направления вентилятора обдува водительского сидения от 1 до 4
+var batteryPercentage = 20 // процент заряда батареии атомобиля от 0 до 100
+var gpsConnected: Bool = true // подключение к GPS
+var songName = "AC/DC - Highway to Hell"
+
+// система обработки ошибок
+enum AutoError: Error {
+    case isLost // заблудился
+    case lowBattery // низкий заряд батареи
+    case brokeAutoDrive // проблемы с управлением машины
+}
+ 
+var isLost: Bool = false
+var lowBattery: Bool = false
+var brokeAutoDrive: Bool = false
+
+// gps подключен, поэтому считаем, что знаем где мы, неисправности автопилота нет и он может работать
+if gpsConnected == false {
+    isLost = true
+    brokeAutoDrive = true
+    autoPilotModeOn = false
+} else {
+    isLost = false
+    brokeAutoDrive = false
+    autoPilotModeOn = true
+}
+
+// батарея 20 процентов
+if batteryPercentage < 30 {
+    lowBattery = true
+} else {
+    lowBattery = false
+}
+
+func autoDrive() throws {
+    if isLost {
+        throw AutoError.isLost
+    }
+ 
+    if lowBattery {
+        throw AutoError.lowBattery
+    }
+ 
+    if brokeAutoDrive {
+        throw AutoError.brokeAutoDrive
+    }
+}
+ 
+do {
+    try autoDrive()
+} catch AutoError.isLost {
+    print("Вы заблудились! Включаю GPS")
+} catch AutoError.lowBattery {
+    print("Батарея садится! Ближайшая станция подзарядки через 1 км 300 м")
+} catch AutoError.brokeAutoDrive {
+    print("Режим автопилота поврежден. Переходим в режим ручного управления!")
+}
+
+// уведомления
+if autoPilotModeOn == true {
+    print("Автопилот включен. Внимательно следите за движением автомобиля.")
+} else {
+    print("Автопилот выключен. Ручное управление.")
+}
+
+if musicPlayerOn == true {
+    print("Играет \(songName)")
+} else {
+    print("воспроизведение музыки приостановлено.")
+}
