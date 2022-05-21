@@ -1,0 +1,85 @@
+import UIKit
+
+// 1-2
+print("1-2")
+enum MyErrors: Error {
+    case fourOO // Bad Request
+    case fourOfour // Not Found
+    case fiveOO // Internal Server Error
+}
+
+var errorCode = MyErrors.fourOfour
+
+func errorFunc() throws {
+    if errorCode == MyErrors.fourOO { throw MyErrors.fourOO }
+    if errorCode == MyErrors.fourOfour { throw MyErrors.fourOfour }
+    if errorCode == MyErrors.fiveOO { throw MyErrors.fiveOO }
+
+}
+
+do {
+    try errorFunc()
+} catch MyErrors.fourOO {
+    print("ERROR 400: Bad Request")
+} catch MyErrors.fourOfour {
+    print("ERROR 404: Not Found")
+} catch MyErrors.fiveOO {
+    print("ERROR 500: Internal Server Error")
+}
+
+// 3
+print("\n3")
+func myFunc<T, E>(a: T, b: E) -> Void {
+    if type(of: a) == type(of: b) {
+        print("YES")
+    } else {
+        print("NO")
+    }
+}
+
+myFunc(a: "A", b: "C")
+
+// 4
+print("\n4")
+enum MyTypes: Error {
+    case conforms
+    case doesNotConform
+}
+
+func myTypeFunc<T, E>(a: T, b: E) -> (Bool) {
+    if type(of: a) == type(of: b) {
+        return true
+    } else {
+        return false
+    }
+}
+
+var myType = myTypeFunc(a: 10, b: "D")
+
+func typeFunc() throws {
+    if myType == true { throw MyTypes.conforms }
+    if myType == false { throw MyTypes.doesNotConform }
+
+}
+
+do {
+    try typeFunc()
+} catch MyTypes.conforms  {
+    print("Types conform")
+} catch MyTypes.doesNotConform  {
+    print("Types do not conform")
+}
+
+
+//5
+print("\n5")
+
+func myFinalFunc<T: Equatable, E: Equatable>(a: T, b: E) -> Void {
+    if a == b as! T {
+        print("a and b are identical")
+    } else {
+        print("a and b are not identical")
+    }
+}
+
+myFinalFunc(a: "Egor", b: "EGOR")
